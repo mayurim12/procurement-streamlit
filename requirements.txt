@@ -1,0 +1,9 @@
+streamlit
+pandas
+matplotlib
+openai
+langchain
+python-dotenv
+langchain_openai
+plotly
+xlsxwriter
