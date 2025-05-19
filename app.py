@@ -336,6 +336,10 @@ if st.button("Generate Report"):
             print("\n---Prompt is: \n", prompt)
             ai_response = client.invoke(prompt)
             result_df = execute_pandas_code(ai_response.content, df)
+            if "Spend" in result_df.columns:
+                result_df["Spend"] = result_df["Spend"].apply(lambda x: f"${x:,.2f}" if isinstance(x, (int, float)) else x)
+            print(result_df.head())
+            
 
             if result_df is not None:
                 # Generate summary using `generate_summary_with_pandas_code`
@@ -354,9 +358,12 @@ if st.button("Generate Report"):
 
                 # Output in tabs
                 tab1, tab2, tab3 = st.tabs(["📄 Table", "📝 Summary", "📊 Plot"])
-
                 with tab1:
-                    display_df = result_df 
+                    # Ensure the "Spend" column is formatted with a dollar sign and converted to a string
+                    if "Spend" in result_df.columns:
+                        result_df["Spend"] = result_df["Spend"].apply(lambda x: f"${x:,.2f}" if isinstance(x, (int, float)) else x)
+
+                    display_df = result_df  # Assign the formatted DataFrame
                     st.dataframe(display_df, use_container_width=False, height=300)
 
                 with tab2:
